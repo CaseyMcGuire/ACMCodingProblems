@@ -36,15 +36,21 @@ Input
 4
 
 Vulcan throks kilko-srashiv k’etwel
+
 Romulan Tehca uckwazta Uhn Neemasta
+
 Menk e’satta prah ra’sata
+
 Russian sluchilos
 
+-
 Dif-tor heh, Spohkh. I’tah trai k’etwel
+
 Uhn kan’aganna! Tehca zuhn ruga’noktan!
 
 Sample Output
 =================
 Vulcan
+
 Romulan
 
