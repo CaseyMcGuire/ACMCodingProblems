@@ -7,8 +7,10 @@ class Solution{
 
     public static void main(String[] args){
 	
+	//get the number of languages there are
 	int numLanguages = in.nextInt();
 	
+	//map every language to its vocabulary
 	for(int i = 0; i < numLanguages; i++){
 	    String[] words = in.nextLine().split(" ");
 	    String language = words[0];
@@ -20,6 +22,7 @@ class Solution{
 	//get rid of blank line
 	in.nextLine();
 	
+	//for each sentence, print out the language associated with it
 	while(in.hasNextLine()){
 	    String[] sentence = in.nextLine().split(" ");
 	    for(String s: sentence){

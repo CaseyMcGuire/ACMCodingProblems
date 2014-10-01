@@ -2,10 +2,10 @@ import java.util.*;
 class Solution {
 
     static Scanner in = new Scanner(System.in);
-    
 
     public static void main(String[] args){
-	//System.out.println((int) '9');
+	
+	//put all the number of times 
 	List<Long> list = new ArrayList<>();
 	while(in.hasNextLine()){
 
@@ -18,17 +18,17 @@ class Solution {
 
     }
 
+    /*
+      Returns the number of times the sequence n, 2n, 3n, 4n, ... must be applied
+      until every decimal integer appears at least once.
+     */
     public static long getNumLines(long n){
-	
-
 	Set<Character> nums = new HashSet<>();
 	for(int i = 48; i <= 57; i++){
 	    nums.add((char) i);
-	   
 	}
 
 	long numLines = 0;
-
 	long curNum = n;
 	
 	while(!nums.isEmpty()){
@@ -41,13 +41,7 @@ class Solution {
 	    curNum = n * (numLines + 1);
 	}
 
-	
-
 	return numLines;
     }
-
-
- 
-    
 
 }
