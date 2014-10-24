@@ -27,8 +27,16 @@ class Solution{
 	    for(int i = 0; i < length; i++){
 		array[i] = translator.get(nextLine[i]);
 	    }
+	    countInversions(
 	}
 	
     }
+
+    public int countInversions(array){
+	
+
+    }
+
+   
 
 }

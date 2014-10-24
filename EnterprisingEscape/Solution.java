@@ -17,10 +17,10 @@ class Solution{
 
     public static void main(String[] args){
 
-	try{
-	    scanner = new Scanner(new File("input.txt"));
-	}
-	catch(FileNotFoundException e){}
+	//	try{
+	    scanner = new Scanner(System.in);
+	    //	}
+	//	catch(FileNotFoundException e){}
 
 	int numCases = Integer.parseInt(scanner.nextLine());
 
@@ -38,7 +38,7 @@ class Solution{
 	    for(int j = 0; j < numClasses; j++){
 		String curLine = scanner.nextLine();
 		String[] line = curLine.split(" ");
-		//	System.out.println(line[0] + " " + line[1]);
+
 		classes.put(line[0], Integer.parseInt(line[1]));
 	    }
 
