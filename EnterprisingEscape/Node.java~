@@ -1,0 +1,16 @@
+    class Node implements Comparable<Node>{
+
+	int dist;
+	Point p;
+	
+	public Node(int d, Point p){
+	    this.dist = d;
+	    this.p = p;
+	}
+
+	
+	public int compareTo(Node n){
+	    return n.dist - this.dist;
+	}
+	
+    }

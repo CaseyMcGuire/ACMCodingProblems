@@ -6,7 +6,8 @@ class Solution{
    
     static Scanner scanner;// = new Scanner(System.in);
     static Map<String, Integer> classes;
-    static TreeMap<Integer, Point> pq;// = new TreeMap<Integer, Point>();
+    // static TreeMap<Integer, Point> pq;// = new TreeMap<Integer, Point>();
+    static PriorityQueue<Node> pq;
     static boolean[][] closedSet;
     static int[][] dist;
     static int x;
@@ -33,7 +34,7 @@ class Solution{
 
 	    //map classes to time to defeat
 	    classes = new HashMap<String, Integer>();
-	    pq = new TreeMap<Integer, Point>();
+	    pq = new PriorityQueue<Node>();// = new TreeMap<Integer, Point>();
 
 	    for(int j = 0; j < numClasses; j++){
 		String curLine = scanner.nextLine();
@@ -67,7 +68,8 @@ class Solution{
 		    x = j;
 		    y = i;
 		    closedSet[i][j] = true;
-		    pq.put(dist[i][j], new Point(i, j));
+		    pq.add(new Node(dist[i][j], new Point(i, j)));
+		    // pq.put(dist[i][j], new Point(i, j));
 		}
 		//otherwise there is an enemy ship
 		else{
@@ -82,18 +84,29 @@ class Solution{
     }
     
     public static int findShortestPath(int[][] grid){
-
+	//	printGraph(grid);
+	//	printGraph(dist);
 	
 	while(!pq.isEmpty()){
-	    Integer lowestKey = pq.firstKey();
-	    Point cur = pq.get(lowestKey);
-	    pq.remove(lowestKey);
+	    // printGraph(dist);
+	    // Integer lowestKey = pq.firstKey();
+	    // Point cur = pq.get(lowestKey);
+	    // pq.remove(lowestKey);
+	    Node n = pq.poll();
+	    Point cur = n.p;
 	    
+	    
+
+	    //  System.out.println("The current lowest key is " + cur);
 	   
 	    int curX = cur.y;
 	    int curY = cur.x;
-
 	    
+	    //if the distance of this node has changed since it was added, add it back and try again
+	    if(n.dist != dist[curY][curX]){
+		pq.add(new Node(dist[curY][curX], new Point(cur.y, cur.x)));
+		continue;
+	    }
 
 	    if(curX == 0 ||curX == width - 1 || curY == 0 || curY == height -1){
 		return dist[curY][curX];
@@ -114,7 +127,7 @@ class Solution{
 		//add to our 'priority queue'
 		if(closedSet[p.y][p.x] == false){
 		    closedSet[p.y][p.x] = true;
-		    pq.put(dist[p.y][p.x], new Point(p.y, p.x));
+		    pq.add(new Node(dist[p.y][p.x], new Point(p.y, p.x)));
 		}
 	    }
 	}
@@ -130,5 +143,20 @@ class Solution{
 	array[3] = new Point(p.y, p.x + 1);
 	return array;
     }
+
+    public static void printGraph(int[][] a){
+	for(int i =0; i < height; i++){
+	    for(int j = 0; j < width; j++){
+		if(a[i][j] == Integer.MAX_VALUE){
+		    System.out.print("x \t");
+		}
+		else System.out.print(a[i][j] + "\t");
+	    }
+	    System.out.println();
+	}
+	System.out.println();
+    }
+
+  
     
 }
