@@ -4,6 +4,9 @@ object Solution{
 
   val chainLength = scala.collection.mutable.Map[Int,Int]()
 
+  /**
+    Returns the longest Collatz chain length between low and high, inclusive.
+    */
   def getLongestChainLength(low:Int, high:Int):Int = {
     (low to high)
       .foldLeft(0)((longest, current) =>
@@ -11,6 +14,9 @@ object Solution{
         else longest)
   }
 
+  /**
+    Returns the chain length for this number
+    */
   def getChainLength(num:Int):Int = {
     var n = num
     var length = 0
@@ -27,6 +33,11 @@ object Solution{
     length+1
   }
 
+  /**
+    Returns the Collatz chain length for this number.
+    Does the same thing as the above function but in a more functional style (though it still has 
+    side effects)
+    */
   def getChainLength2(num: Int):Int = {
     @tailrec
     def recurChainLength(n: Int, curLength: Int):Int = {
