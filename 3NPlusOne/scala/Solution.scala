@@ -1,14 +1,14 @@
 import scala.io.Source
-
+import scala.annotation._
 object Solution{
 
   val chainLength = scala.collection.mutable.Map[Int,Int]()
 
   def getLongestChainLength(low:Int, high:Int):Int = {
     (low to high)
-      .foldLeft(0)((longest, current) => 
-      if (getChainLength(current) > longest) getChainLength(current) 
-      else longest)
+      .foldLeft(0)((longest, current) =>
+        if (getChainLength2(current) > longest) getChainLength2(current)
+        else longest)
   }
 
   def getChainLength(num:Int):Int = {
@@ -23,6 +23,19 @@ object Solution{
       else if (n % 2 != 0) n = 3*n + 1
       else n = n/2
     }
+    chainLength += (num -> length)
+    length+1
+  }
+
+  def getChainLength2(num: Int):Int = {
+    @tailrec
+    def recurChainLength(n: Int, curLength: Int):Int = {
+      if(n == 1) curLength
+      else if(chainLength.contains(n)) curLength + chainLength(n)
+      else if(n % 2 != 0) recurChainLength(3*n + 1, curLength + 1)
+      else recurChainLength(n/2, curLength + 1)
+    }
+    val length = recurChainLength(num, 0)
     chainLength += (num -> length)
     length+1
   }
