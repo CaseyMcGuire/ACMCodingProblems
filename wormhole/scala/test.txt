@@ -1,0 +1,9 @@
+1
+2
+Earth 1 1 1
+Proxima 2 2 2
+0
+2
+Earth Proxima
+Proxima Earth
+
