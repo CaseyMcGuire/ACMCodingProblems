@@ -11,7 +11,7 @@ if [ ! -f $2 ] ; then
 fi
 
 if [ ! -f $3 ] ; then
-    echo "No input file"
+    echo "No answer file"
     exit 0
 fi
 
@@ -22,4 +22,11 @@ if [ $? -ne 0 ] ; then
     exit 0
 fi
 
-#./a.out < $2 
+#OUTPUT = $(./a.out < $2 | diff $3 -)
+
+#OUTPUT = ""
+#if [ -z OUTPUT ] ; then
+#    echo "PASS"
+#else
+#    echo "FAIL"
+#fi

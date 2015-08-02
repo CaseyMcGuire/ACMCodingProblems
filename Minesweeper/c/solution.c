@@ -15,9 +15,10 @@ int main(int argc, char **argv) {
   int i;
   for(i = 1;;i++) {
     scanf("%d %d",&height, &width);
+
     if(width == 0 && height == 0) break;
     else if(i != 1) printf("\n");
-        
+
     minefield = get_minefield(width, height);
     solve_minefield(minefield, width, height);
     print_minefield(minefield, width, height, i);
@@ -34,7 +35,7 @@ char** get_minefield(int width, int height) {
   c = malloc(height*sizeof(char*));
   
   int i,j;
-  for(i = 0 ; i < width ; i++) {
+  for(i = 0 ; i < height; i++) {
     *(c + i) = malloc(width*sizeof(char));
   }
 
@@ -54,8 +55,13 @@ char** get_minefield(int width, int height) {
 
 /* Free memory that was malloced to create board */
 void free_minefield(char** minefield, int width, int height) {
-
+  int i;
+  for(i = 0; i < height ; i++) {
+    free(minefield[i]);
+  }
+  free(minefield);
 }
+
 
 /* Solve the minefield */
 void solve_minefield(char** minefield, int width, int height) {
@@ -90,7 +96,7 @@ void increment_fields(char** minefield, int row_index, int col_index, int width,
 
 /* Print the minefield to standard output */
 void print_minefield(char** minefield, int width, int height, int count) {
-  printf("Field #%d\n", count);
+  printf("Field #%d:\n", count);
   int i,j;
   for(i = 0; i < height ; i++) {
     for(j = 0; j < width ; j++) {
