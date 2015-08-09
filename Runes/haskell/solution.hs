@@ -22,23 +22,26 @@ solveRune (Rune left op right ans) =
   let possibleNums = Set.toList $ Set.difference getNums (Set.fromList (right ++ left ++ ans))
       getLowestPossibleSolution acc x = if acc /= '\0'
                                         then acc
-                                        else if isValidSolution x
+                                        else if isValidSolution x (Rune left op right ans)
                                              then x
                                              else acc
-      --returns true if the given number is a valid solution for this rune
-      isValidSolution num =
-        let strToInt str = read str::Integer
-            replaceQuestionMarks = map (\x -> if x == '?' then num else x)
-            leftNum = replaceQuestionMarks left
-            operand = getOperation op
-            rightNum = replaceQuestionMarks right
-            answer = replaceQuestionMarks ans
-        in strToInt rightNum `operand` strToInt leftNum == strToInt answer
-           && validNumber rightNum
-           && validNumber leftNum
   in if null possibleNums
      then '\0'
      else foldl' (\acc x -> getLowestPossibleSolution acc x) '\0' possibleNums
+
+--Return whether the given number (as a Char) is a valid solution for the given rune
+isValidSolution :: Char -> Rune -> Bool
+isValidSolution num (Rune left op right ans) =
+  let strToInt str = read str::Integer
+      replaceQuestionMarks = map (\x -> if x == '?' then num else x)
+      leftNum = replaceQuestionMarks left
+      operand = getOperation op
+      rightNum = replaceQuestionMarks right
+      answer = replaceQuestionMarks ans
+  in strToInt leftNum `operand` strToInt rightNum == strToInt answer
+     && validNumber rightNum
+     && validNumber leftNum
+     && validNumber answer
 
 --Returns true if the given string is a valid number (assuming that all the characters are digits)
 validNumber :: String -> Bool
@@ -57,6 +60,7 @@ strToRune line =
       (secondNum,_:answer) = span (/='=') (tail rest)
   in Rune firstNum (Operation op) secondNum answer
 
+test = isValidSolution '0' (Rune "123?45" (Operation '-') "?" "123?45")
 
 main::IO()
 main = do
