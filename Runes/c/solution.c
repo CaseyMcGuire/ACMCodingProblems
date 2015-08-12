@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-int (*get_operator(char)) (int, int);
-int plus(int first, int second);
-int minus(int first, int second);
-int multiply(int first, int second);
+long (*get_operator(char)) (long, long);
+long plus(long first, long second);
+long minus(long first, long second);
+long multiply(long first, long second);
 struct Rune* get_rune();
 void init_rune(struct Rune**);
 int is_operator(char c);
@@ -15,12 +15,17 @@ int solve_rune(struct Rune *rune);
 void get_possible_digits(char *arr, struct Rune *rune);
 void filter_val(char *arr, char *num);
 int is_solution(char cur_char, struct Rune *rune);
+void fill_array(char *num, char replacement, int length);
+int is_valid_number(char *num, int length);
 
 struct Rune {
   char *first_num;
+  int first_num_length;
   char *second_num;
+  int second_num_length;
   char *answer;
-  int (*operator)(int,int);
+  int answer_length;
+  long (*operator)(long,long);
 };
 
 const char nums[] = {'0', '1', '2', '3','4','5','6','7','8','9' };
@@ -75,7 +80,8 @@ struct Rune* get_rune() {
   rune->first_num = (char*) malloc(i + 1);
   string_copy(buffer, rune->first_num, 0, i);
   *(rune->first_num + i) = '\0';
-  
+  rune->first_num_length = strlen(rune->first_num);
+
   /* Get our function */
   rune->operator = get_operator(buffer[i]);
 
@@ -86,15 +92,18 @@ struct Rune* get_rune() {
   string_copy(buffer, rune->second_num, i + 1, j);
 
   *(rune->second_num + (j - i - 1)) = '\0';
-  
+  rune->second_num_length = strlen(rune->second_num);
+
   /* Now, get the answer */
   rune->answer = (char*) malloc(line_length - j);
   string_copy(buffer, rune->answer, j + 1, line_length);
   *(rune->answer + (line_length - j - 1)) = '\0';
-  
+  rune->answer_length = strlen(rune->answer);
+
   return rune;
 }
 
+/* Given a rune, return the number that will solve it. */
 int solve_rune(struct Rune *rune) {
   char possible_digits[10];
   int i;
@@ -112,33 +121,44 @@ int solve_rune(struct Rune *rune) {
   return -1;
 }
 
+/* Returns whether the passed character is a solution for the passed rune.  */
 int is_solution(char cur_char, struct Rune *rune) {
-  int first_length = strlen(rune->first_num) + 1;
+  int first_length = rune->first_num_length + 1;
   char new_first[first_length];
   strcpy(new_first, rune->first_num);
   
-  int second_length = strlen(rune->second_num) + 1;
+  int second_length = rune->second_num_length + 1;
   char new_second[second_length];
   strcpy(new_second, rune->second_num);
 
-  int answer_length = strlen(rune->answer) + 1;
+  int answer_length = rune->answer_length + 1;
   char new_answer[answer_length];
   strcpy(new_answer, rune->answer);
 
-  int i;
-  for(i = 0 ; i < first_length ; i++) {
-    if(new_first[i] == '?') new_first[i] = cur_char;
-  }
+  fill_array(new_first, cur_char, first_length);
+  if(!is_valid_number(new_first, first_length)) return 0;
 
-  for(i = 0 ; i < second_length ; i++) {
-    if(new_second[i] == '?') new_second[i] = cur_char;
-  }
+  fill_array(new_second, cur_char, second_length);
+  if(!is_valid_number(new_second, second_length)) return 0;
 
-  for(i = 0 ; i < answer_length ; i++) {
-    if(new_answer[i] == '?') new_answer[i] = cur_char;
-  }
+  fill_array(new_answer, cur_char, answer_length);
+  if(!is_valid_number(new_answer, answer_length)) return 0;
 
   return rune->operator(atol(new_first), atol(new_second)) == atol(new_answer);
+}
+
+/* Replaces all question marks in the num char array with the replacement parameter.  */
+void fill_array(char *num, char replacement, int length) {
+  int i;
+  for(i = 0 ; i < length ; i++) {
+    if(num[i] == '?') num[i] = replacement;
+  }
+}
+
+/* Returns whether the passed string is a valid number. A number is valid if it doesn't start with
+ a zero or is only one character (Note: this assumes each char is a digit)*/
+int is_valid_number(char *num, int length) {
+  return length == 1 || num[0] != '0';
 }
 
 
@@ -211,8 +231,8 @@ long str_to_long(char *str) {
   Given a arithmetic character ('+','-', '*'), returns a function pointer that will
   perform that operation on two ints.
  */
-int (*get_operator(char operator)) (int,int) {
-  int (*func)(int,int);
+long (*get_operator(char operator)) (long,long) {
+  long (*func)(long,long);
   switch(operator) {
   case '+':
     func = plus;
@@ -230,16 +250,16 @@ int (*get_operator(char operator)) (int,int) {
 }
 
 /* Adds the first and second argument together and returns it. */
-int plus(int first, int second) {
+long plus(long first, long second) {
   return first + second;
 }
 
 /* Multiplies the first and second argument together and returns it. */
-int multiply(int first, int second) {
+long multiply(long first, long second) {
   return first * second;
 }
 
 /* Subtracts the second argument from the first argument and returns it. */
-int minus(int first, int second) {
+long minus(long first, long second) {
   return first - second;
 }
