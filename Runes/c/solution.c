@@ -10,8 +10,8 @@ struct Rune* get_rune();
 void init_rune(struct Rune**);
 int is_operator(char c);
 void string_copy(char *to, char *from, int start, int end);
-long str_to_long(char *str);
 int solve_rune(struct Rune *rune);
+void free_rune(struct Rune *rune);
 void get_possible_digits(char *arr, struct Rune *rune);
 void filter_val(char *arr, char *num);
 int is_solution(char cur_char, struct Rune *rune);
@@ -40,9 +40,7 @@ int main(int argc, char **argv) {
   for(i = 0; i < num_test_cases; i++) {
     struct Rune *cur_rune = get_rune();
     printf("%d\n", solve_rune(cur_rune));
-    //    printf("first num : %s\n", cur_rune->first_num);
-    //    printf("second num : %s\n", cur_rune->second_num);
-    //    printf("answer : %s\n", cur_rune->answer);
+    free_rune(cur_rune);
   }
   return 0;
 }
@@ -51,7 +49,8 @@ struct Rune* get_rune() {
   struct Rune *rune;
   
   /* Read in the maximum possible length of a line */
-  /* The longest possible is -999999*999999=-999998000001 */
+  /* The longest possible is -999999*999999=-999998000001*/
+  /* By my count, this about 29 characters. */
   int max_line_length = 29;
   char buffer[max_line_length];
 
@@ -112,7 +111,7 @@ int solve_rune(struct Rune *rune) {
   }
 
   get_possible_digits(possible_digits, rune);
-
+  
   for(i = 0 ; i < 10 ; i++) {
     if(possible_digits[i] != '\0' && is_solution(possible_digits[i], rune)) {
       return i;
@@ -158,7 +157,7 @@ void fill_array(char *num, char replacement, int length) {
 /* Returns whether the passed string is a valid number. A number is valid if it doesn't start with
  a zero or is only one character (Note: this assumes each char is a digit)*/
 int is_valid_number(char *num, int length) {
-  return length == 1 || num[0] != '0';
+  return length == 2 || num[0] != '0';
 }
 
 
@@ -199,33 +198,12 @@ void init_rune(struct Rune** rune) {
 }
 
 void free_rune(struct Rune *rune) {
-  
+  free(rune->first_num);
+  free(rune->second_num);
+  free(rune->answer);
+  free(rune);
+  rune = NULL;
 }
-
-
-/* Converts the given string to a long. Assumes that every character in the string is a digit
- and that the string is null-terminated.*/
-long str_to_long(char *str) {
-  /*
-  int length = strlen(str);
-  int i,counter = 0;
-
-  for(i = 0; i < length ; i++) {
-    if(i == 0) counter = 1;
-    else counter *= 10;
-  }
-
-  long num = 0;
-  for(i = 0 ; i < length ; i++) {
-    num += (counter * (str[i] - '0'));
-    counter /= 10;
-  }
-
-  return num;*/
-  return atol(str);
-}
-
-
 
 /*
   Given a arithmetic character ('+','-', '*'), returns a function pointer that will
