@@ -30,7 +30,7 @@ object Solution {
 
       val travelTimes = scala.io.StdIn.readInt
 
-      println("Case " + (curTest + 1))
+      println("Case " + (curTest + 1) + ":")
       Range(0, travelTimes).foreach(_ => {
         val curLine = scala.io.StdIn.readLine.split(" ")
         val start = curLine(0)
